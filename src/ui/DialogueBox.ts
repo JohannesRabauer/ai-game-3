@@ -10,7 +10,7 @@ export class DialogueBox {
   private choicesContainer: Rectangle;
   private isVisible = false;
   private onChoiceCallback: ((choice: DialogueChoice) => void) | null = null;
-  private typewriterInterval: number | null = null;
+  private typewriterInterval: ReturnType<typeof setInterval> | null = null;
   
   constructor(scene: Scene) {
     // Create fullscreen UI

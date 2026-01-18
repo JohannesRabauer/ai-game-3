@@ -78,13 +78,8 @@ export class QualitySettings {
     // MSAA
     this.pipeline.samples = quality.msaa;
     
-    // SSAO (Screen Space Ambient Occlusion)
-    this.pipeline.SSAOEnabled = quality.ssaoEnabled;
-    if (quality.ssaoEnabled) {
-      this.pipeline.ssaoRatio = 0.5; // Performance optimization
-      this.pipeline.ssaoRadius = 1;
-      this.pipeline.ssaoTotalStrength = 1.3;
-    }
+    // Note: SSAO properties have been removed from DefaultRenderingPipeline in newer versions
+    // If SSAO is needed, use SSAORenderingPipeline separately
     
     // Bloom
     this.pipeline.bloomEnabled = quality.bloomEnabled;

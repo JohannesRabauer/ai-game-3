@@ -25,9 +25,9 @@ class Game {
   async init() {
     this.showLoadingProgress('Initializing engine...', 10);
     
-    const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
-    if (!canvas) {
-      console.error('Canvas not found');
+    const canvas = document.getElementById('renderCanvas');
+    if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
+      console.error('Canvas not found or is not an HTMLCanvasElement');
       return;
     }
     

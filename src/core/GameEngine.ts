@@ -9,7 +9,6 @@ export class GameEngine {
   private engine: Engine;
   private scene: Scene | null = null;
   private havokPlugin: HavokPlugin | null = null;
-  private qualitySettings: QualitySettings | null = null;
   
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -65,7 +64,7 @@ export class GameEngine {
     // Set up basic lighting
     
     // Set up visual quality
-    this.qualitySettings = new QualitySettings(this.scene);
+    new QualitySettings(this.scene);
     this.setupLighting();
   }
   
