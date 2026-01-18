@@ -31,8 +31,8 @@ export class InputManager {
     });
     
     document.addEventListener('pointerlockchange', () => {
-      const element = document.pointerLockElement;
-      this.pointerLocked = element !== null && element instanceof HTMLCanvasElement && element === this.canvas;
+      // Compare using object identity - both are DOM elements
+      this.pointerLocked = document.pointerLockElement === (this.canvas as unknown as Element);
     });
     
     // Mouse movement
