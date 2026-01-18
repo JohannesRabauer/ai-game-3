@@ -1,4 +1,5 @@
 import { Scene, Sound, Vector3 } from '@babylonjs/core';
+import { CONFIG } from '../config';
 
 /**
  * AudioManager handles all game audio including sound effects and music
@@ -9,12 +10,15 @@ export class AudioManager {
   private musicVolume = 0.5;
   private sfxVolume = 0.7;
   private isMuted = false;
+  private audioContext: AudioContext;
+  private objectURLs: string[] = [];
   
   // Track background music
   private currentMusic: Sound | null = null;
   
   constructor(scene: Scene) {
     this.scene = scene;
+    this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     this.loadSounds();
   }
   
@@ -52,11 +56,10 @@ export class AudioManager {
   private createPlaceholderSound(name: string, frequency: number, duration: number): void {
     // Create a simple beep sound using Web Audio API
     // This is a placeholder - in production you'd load actual audio files
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     
     // Create a buffer for the sound
-    const sampleRate = audioContext.sampleRate;
-    const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
+    const sampleRate = this.audioContext.sampleRate;
+    const buffer = this.audioContext.createBuffer(1, sampleRate * duration, sampleRate);
     const channel = buffer.getChannelData(0);
     
     // Generate a simple tone with envelope
@@ -80,6 +83,9 @@ export class AudioManager {
     const wav = this.audioBufferToWav(buffer);
     const blob = new Blob([wav], { type: 'audio/wav' });
     const url = URL.createObjectURL(blob);
+    
+    // Track URL for cleanup
+    this.objectURLs.push(url);
     
     // Create Babylon.js Sound
     const sound = new Sound(name, url, this.scene, () => {
@@ -189,7 +195,7 @@ export class AudioManager {
       sound.setVolume(vol);
       sound.spatialSound = true;
       sound.setPosition(position);
-      sound.maxDistance = 50;
+      sound.maxDistance = CONFIG.SPATIAL_AUDIO_MAX_DISTANCE;
       sound.play();
     }
   }
@@ -286,5 +292,12 @@ export class AudioManager {
     this.sounds.forEach(sound => sound.dispose());
     this.sounds.clear();
     this.currentMusic = null;
+    
+    // Clean up object URLs to prevent memory leaks
+    this.objectURLs.forEach(url => URL.revokeObjectURL(url));
+    this.objectURLs = [];
+    
+    // Close audio context
+    this.audioContext.close();
   }
 }

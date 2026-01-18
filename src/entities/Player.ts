@@ -29,7 +29,6 @@ export class Player {
   private velocity = Vector3.Zero();
   private isMovementEnabled = true;
   private lastFootstepTime = 0;
-  private footstepInterval = 400; // ms between footsteps
   
   constructor(scene: Scene, inputManager: InputManager, audioManager: AudioManager, position: Vector3) {
     this.scene = scene;
@@ -179,7 +178,9 @@ export class Player {
       // Play footstep sounds while moving on ground
       if (this.isOnGround) {
         const now = Date.now();
-        const interval = isRunning ? this.footstepInterval * 0.7 : this.footstepInterval;
+        const interval = isRunning 
+          ? CONFIG.FOOTSTEP_INTERVAL * CONFIG.FOOTSTEP_RUN_MULTIPLIER 
+          : CONFIG.FOOTSTEP_INTERVAL;
         if (now - this.lastFootstepTime > interval) {
           this.audioManager.playSound('footstep', 0.3);
           this.lastFootstepTime = now;
