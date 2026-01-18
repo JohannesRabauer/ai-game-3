@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Game 3 - Third Person Shooter</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="renderCanvas"></canvas>
+      <div id="ui-overlay">
+        <div id="loading-screen" class="active">
+          <div class="loading-content">
+            <h1>Loading...</h1>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p id="loading-text">Initializing game...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
