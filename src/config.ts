@@ -30,4 +30,9 @@ export const CONFIG = {
   DEFAULT_QUALITY: 'high' as 'low' | 'medium' | 'high',
   SHADOW_MAP_SIZE: 2048,
   MSAA_SAMPLES: 4,
+  
+  // Audio settings
+  AUDIO_ENABLED: true,
+  MUSIC_VOLUME: 0.5,
+  SFX_VOLUME: 0.7,
 };

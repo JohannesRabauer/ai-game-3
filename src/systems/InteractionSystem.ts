@@ -2,6 +2,7 @@ import { Scene, Vector3 } from '@babylonjs/core';
 import { NPC } from '../entities/NPC';
 import { Player } from '../entities/Player';
 import { InputManager } from '../core/InputManager';
+import { AudioManager } from '../core/AudioManager';
 import { DialogueBox } from '../ui/DialogueBox';
 import { DIALOGUE_DATA, DialogueChoice } from '../data/dialogues';
 import { CONFIG } from '../config';
@@ -9,15 +10,17 @@ import { CONFIG } from '../config';
 export class InteractionSystem {
   private player: Player;
   private inputManager: InputManager;
+  private audioManager: AudioManager;
   private npcs: NPC[] = [];
   private dialogueBox: DialogueBox;
   private currentNPC: NPC | null = null;
   private currentDialogueId: string = '';
   private wasInteractPressed = false;
   
-  constructor(scene: Scene, player: Player, inputManager: InputManager) {
+  constructor(scene: Scene, player: Player, inputManager: InputManager, audioManager: AudioManager) {
     this.player = player;
     this.inputManager = inputManager;
+    this.audioManager = audioManager;
     this.dialogueBox = new DialogueBox(scene);
     
     // Register update loop
@@ -97,6 +100,9 @@ export class InteractionSystem {
     this.player.setMovementEnabled(false);
     this.inputManager.releasePointerLock();
     
+    // Play dialogue open sound
+    this.audioManager.playSound('dialogue_open');
+    
     // Show initial dialogue
     this.currentDialogueId = dialogueData.initialDialogue;
     this.showCurrentDialogue(dialogueData.name);
@@ -122,6 +128,9 @@ export class InteractionSystem {
   
   private handleChoice(choice: DialogueChoice): void {
     console.log(`Player chose: ${choice.text}`);
+    
+    // Play selection sound
+    this.audioManager.playSound('dialogue_select');
     
     // Handle action if specified
     if (choice.action) {
@@ -163,6 +172,9 @@ export class InteractionSystem {
       this.currentNPC.stopTalking();
       this.currentNPC = null;
     }
+    
+    // Play dialogue close sound
+    this.audioManager.playSound('dialogue_close');
     
     this.dialogueBox.hide();
     this.currentDialogueId = '';
