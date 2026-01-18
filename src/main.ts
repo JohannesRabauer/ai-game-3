@@ -99,6 +99,9 @@ class Game {
     // Add crosshair to UI
     this.addCrosshair();
     
+    // Setup audio controls
+    this.setupAudioControls();
+    
     this.showLoadingProgress('Ready!', 100);
     
     // Hide loading screen after a brief moment
@@ -188,6 +191,30 @@ class Game {
     const crosshair = document.createElement('div');
     crosshair.className = 'crosshair';
     overlay.appendChild(crosshair);
+  }
+  
+  private setupAudioControls(): void {
+    const muteButton = document.getElementById('mute-toggle');
+    if (!muteButton || !this.audioManager) return;
+    
+    muteButton.addEventListener('click', () => {
+      if (this.audioManager) {
+        this.audioManager.toggleMute();
+        const isMuted = this.audioManager.isMutedState();
+        
+        // Update button appearance
+        const icon = muteButton.querySelector('.mute-icon');
+        if (icon) {
+          icon.textContent = isMuted ? '🔇' : '🔊';
+        }
+        
+        if (isMuted) {
+          muteButton.classList.add('muted');
+        } else {
+          muteButton.classList.remove('muted');
+        }
+      }
+    });
   }
   
   private showLoadingProgress(text: string, percent: number): void {
