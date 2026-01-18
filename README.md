@@ -42,6 +42,20 @@ npm run build
 
 The built files will be in the `dist/` directory.
 
+### Deploying to GitHub Pages
+
+The repository is configured for automatic deployment to GitHub Pages via GitHub Actions.
+
+**⚠️ Important:** Before the first deployment, you must enable GitHub Pages in the repository settings:
+
+1. Go to [Repository Settings > Pages](https://github.com/JohannesRabauer/ai-game-3/settings/pages)
+2. Under "Build and deployment", set **Source** to "GitHub Actions"
+3. Save the settings
+
+Once enabled, every push to the `main` branch will automatically deploy to: `https://JohannesRabauer.github.io/ai-game-3/`
+
+For detailed setup instructions, see [SETUP.md](SETUP.md).
+
 ## 🎯 Controls
 
 - **WASD** - Move character
