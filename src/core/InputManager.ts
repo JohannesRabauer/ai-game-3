@@ -7,7 +7,7 @@ export class InputManager {
   private pointerLocked = false;
   private allowPointerLockRequest = true;
   
-  constructor(private scene: Scene, private canvas: HTMLCanvasElement) {
+  constructor(_scene: Scene, private canvas: HTMLCanvasElement) {
     this.setupKeyboardListeners();
     this.setupMouseListeners();
   }
@@ -31,7 +31,8 @@ export class InputManager {
     });
     
     document.addEventListener('pointerlockchange', () => {
-      this.pointerLocked = document.pointerLockElement === this.canvas;
+      // Compare using object identity - both are DOM elements
+      this.pointerLocked = document.pointerLockElement === (this.canvas as unknown as Element);
     });
     
     // Mouse movement

@@ -5,7 +5,6 @@ export interface QualityLevel {
   name: 'low' | 'medium' | 'high';
   msaa: number;
   shadowMapSize: number;
-  ssaoEnabled: boolean;
   bloomEnabled: boolean;
   chromaticAberrationEnabled: boolean;
   sharpenEnabled: boolean;
@@ -16,7 +15,6 @@ export const QUALITY_PRESETS: Record<string, QualityLevel> = {
     name: 'low',
     msaa: 1,
     shadowMapSize: 512,
-    ssaoEnabled: false,
     bloomEnabled: false,
     chromaticAberrationEnabled: false,
     sharpenEnabled: false,
@@ -25,7 +23,6 @@ export const QUALITY_PRESETS: Record<string, QualityLevel> = {
     name: 'medium',
     msaa: 2,
     shadowMapSize: 1024,
-    ssaoEnabled: false,
     bloomEnabled: true,
     chromaticAberrationEnabled: false,
     sharpenEnabled: false,
@@ -34,7 +31,6 @@ export const QUALITY_PRESETS: Record<string, QualityLevel> = {
     name: 'high',
     msaa: 4,
     shadowMapSize: 2048,
-    ssaoEnabled: true,
     bloomEnabled: true,
     chromaticAberrationEnabled: true,
     sharpenEnabled: true,
@@ -78,13 +74,8 @@ export class QualitySettings {
     // MSAA
     this.pipeline.samples = quality.msaa;
     
-    // SSAO (Screen Space Ambient Occlusion)
-    this.pipeline.SSAOEnabled = quality.ssaoEnabled;
-    if (quality.ssaoEnabled) {
-      this.pipeline.ssaoRatio = 0.5; // Performance optimization
-      this.pipeline.ssaoRadius = 1;
-      this.pipeline.ssaoTotalStrength = 1.3;
-    }
+    // Note: SSAO properties have been removed from DefaultRenderingPipeline in newer versions
+    // If SSAO is needed, use SSAORenderingPipeline separately
     
     // Bloom
     this.pipeline.bloomEnabled = quality.bloomEnabled;

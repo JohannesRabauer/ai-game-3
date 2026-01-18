@@ -3,10 +3,8 @@ import {
   Vector3,
   Ray,
   ParticleSystem,
-  Texture,
   Color4,
-  AbstractMesh,
-  Sound
+  AbstractMesh
 } from '@babylonjs/core';
 import { Player } from '../entities/Player';
 import { CONFIG } from '../config';
@@ -147,7 +145,6 @@ export class CombatSystem {
     mesh.metadata.hits = (mesh.metadata.hits || 0) + 1;
     
     // Visual feedback: make mesh flash red briefly
-    const originalMaterial = mesh.material;
     // TODO: Create a red material and swap briefly
     
     console.log(`Dealt ${damage} damage to ${mesh.name} (${mesh.metadata.hits} hits total)`);

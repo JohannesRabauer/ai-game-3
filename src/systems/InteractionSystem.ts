@@ -1,5 +1,5 @@
 import { Scene, Vector3 } from '@babylonjs/core';
-import { NPC, NPCState } from '../entities/NPC';
+import { NPC } from '../entities/NPC';
 import { Player } from '../entities/Player';
 import { InputManager } from '../core/InputManager';
 import { DialogueBox } from '../ui/DialogueBox';
@@ -7,7 +7,6 @@ import { DIALOGUE_DATA, DialogueChoice } from '../data/dialogues';
 import { CONFIG } from '../config';
 
 export class InteractionSystem {
-  private scene: Scene;
   private player: Player;
   private inputManager: InputManager;
   private npcs: NPC[] = [];
@@ -17,7 +16,6 @@ export class InteractionSystem {
   private wasInteractPressed = false;
   
   constructor(scene: Scene, player: Player, inputManager: InputManager) {
-    this.scene = scene;
     this.player = player;
     this.inputManager = inputManager;
     this.dialogueBox = new DialogueBox(scene);
