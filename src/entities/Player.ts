@@ -13,22 +13,27 @@ import {
   PhysicsAggregate
 } from '@babylonjs/core';
 import { InputManager } from '../core/InputManager';
+import { AudioManager } from '../core/AudioManager';
 import { CONFIG } from '../config';
 
 export class Player {
   private scene: Scene;
   private inputManager: InputManager;
+  private audioManager: AudioManager;
   private root: TransformNode;
   private mesh: Mesh;
   private physicsBody: PhysicsBody | null = null;
   private camera: ArcRotateCamera;
   private isOnGround = false;
+  private wasOnGround = false;
   private velocity = Vector3.Zero();
   private isMovementEnabled = true;
+  private lastFootstepTime = 0;
   
-  constructor(scene: Scene, inputManager: InputManager, position: Vector3) {
+  constructor(scene: Scene, inputManager: InputManager, audioManager: AudioManager, position: Vector3) {
     this.scene = scene;
     this.inputManager = inputManager;
+    this.audioManager = audioManager;
     
     // Create player mesh (capsule representation)
     this.mesh = this.createPlayerMesh();
@@ -169,6 +174,18 @@ export class Player {
       // Rotate player mesh to face movement direction
       const angle = Math.atan2(moveDirection.x, moveDirection.z);
       this.mesh.rotation.y = angle;
+      
+      // Play footstep sounds while moving on ground
+      if (this.isOnGround) {
+        const now = Date.now();
+        const interval = isRunning 
+          ? CONFIG.FOOTSTEP_INTERVAL * CONFIG.FOOTSTEP_RUN_MULTIPLIER 
+          : CONFIG.FOOTSTEP_INTERVAL;
+        if (now - this.lastFootstepTime > interval) {
+          this.audioManager.playSound('footstep', 0.3);
+          this.lastFootstepTime = now;
+        }
+      }
     } else {
       this.velocity.x = 0;
       this.velocity.z = 0;
@@ -183,12 +200,19 @@ export class Player {
     // Check if on ground (simple raycast down)
     this.checkGroundContact();
     
+    // Play landing sound when touching ground after being in air
+    if (this.isOnGround && !this.wasOnGround) {
+      this.audioManager.playSound('land', 0.4);
+    }
+    this.wasOnGround = this.isOnGround;
+    
     // Handle jump
     if (this.inputManager.isJumping() && this.isOnGround) {
       const currentVel = this.physicsBody.getLinearVelocity();
       this.physicsBody.setLinearVelocity(
         new Vector3(currentVel.x, CONFIG.JUMP_FORCE, currentVel.z)
       );
+      this.audioManager.playSound('jump', 0.5);
     }
   }
   

@@ -8,6 +8,7 @@ A browser-based 3D third-person shooter game built with Babylon.js 6.x and Havok
 - **Havok physics** for realistic character physics
 - **Shooting mechanics** with raycasting and particle effects
 - **NPC interaction system** with dialogue trees
+- **Audio system** with sound effects for shooting, footsteps, jumping, and interactions
 - **High-quality visuals** with SSAO, bloom, and post-processing effects
 - **Quality settings** toggle for different performance levels
 - **GitHub Pages hosting** for easy deployment
@@ -73,6 +74,7 @@ ai-game-3/
 │   ├── core/           # Core engine systems
 │   │   ├── GameEngine.ts
 │   │   ├── InputManager.ts
+│   │   ├── AudioManager.ts
 │   │   └── QualitySettings.ts
 │   ├── entities/       # Game entities
 │   │   ├── Player.ts
@@ -134,7 +136,21 @@ Game settings can be adjusted in `src/config.ts`:
 - Movement speed
 - Camera settings
 - Combat parameters
+- Audio settings (volume levels)
 - Quality presets
+
+### Audio System
+
+The game includes a comprehensive audio system (`src/core/AudioManager.ts`) that provides:
+- **Sound effects**: Gunshots, impacts, footsteps, jumps, and UI interactions
+- **Spatial audio**: 3D positional sound for immersive gameplay
+- **Volume control**: Separate controls for music and sound effects
+- **Mute functionality**: Toggle audio on/off
+
+Currently, the game uses procedurally generated placeholder sounds. To use custom audio files:
+1. Add audio files (MP3, WAV, OGG) to a `public/sounds/` directory
+2. Update the `loadSounds()` method in `AudioManager.ts` to load your audio files
+3. Adjust volume levels in `src/config.ts`
 
 ## 📝 License
 
@@ -146,9 +162,12 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 🎯 Roadmap
 
+- [x] Implement audio system with sound effects
+- [ ] Add custom audio files (replace placeholder sounds)
+- [ ] Add background music
+- [ ] Add audio settings UI panel
 - [ ] Acquire and integrate free 3D assets
 - [ ] Add character animations (idle, walk, run, shoot)
-- [ ] Implement audio system with sound effects
 - [ ] Add more NPCs with varied dialogues
 - [ ] Create larger game world
 - [ ] Add inventory system

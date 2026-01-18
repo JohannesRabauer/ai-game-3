@@ -1,6 +1,7 @@
 import './style.css';
 import { GameEngine } from './core/GameEngine';
 import { InputManager } from './core/InputManager';
+import { AudioManager } from './core/AudioManager';
 import { Player } from './entities/Player';
 import { CombatSystem } from './systems/CombatSystem';
 import { InteractionSystem } from './systems/InteractionSystem';
@@ -18,6 +19,7 @@ import {
 class Game {
   private engine: GameEngine | null = null;
   private inputManager: InputManager | null = null;
+  private audioManager: AudioManager | null = null;
   private player: Player | null = null;
   private combatSystem: CombatSystem | null = null;
   private interactionSystem: InteractionSystem | null = null;
@@ -48,6 +50,9 @@ class Game {
     // Setup input
     this.inputManager = new InputManager(scene, canvas);
     
+    // Setup audio manager
+    this.audioManager = new AudioManager(scene);
+    
     // Setup camera (temporary, will be replaced by player camera)
     const camera = new ArcRotateCamera(
       'camera',
@@ -69,13 +74,13 @@ class Game {
     this.showLoadingProgress('Loading player...', 85);
     
     // Create player
-    this.player = new Player(scene, this.inputManager, new Vector3(0, 2, 0));
+    this.player = new Player(scene, this.inputManager, this.audioManager!, new Vector3(0, 2, 0));
     
     // Create combat system
-    this.combatSystem = new CombatSystem(scene, this.player);
+    this.combatSystem = new CombatSystem(scene, this.player, this.audioManager!);
     
     // Create interaction system
-    this.interactionSystem = new InteractionSystem(scene, this.player, this.inputManager);
+    this.interactionSystem = new InteractionSystem(scene, this.player, this.inputManager, this.audioManager!);
     
     // Add some test NPCs
     this.createTestNPCs(scene);
@@ -93,6 +98,9 @@ class Game {
     
     // Add crosshair to UI
     this.addCrosshair();
+    
+    // Setup audio controls
+    this.setupAudioControls();
     
     this.showLoadingProgress('Ready!', 100);
     
@@ -183,6 +191,30 @@ class Game {
     const crosshair = document.createElement('div');
     crosshair.className = 'crosshair';
     overlay.appendChild(crosshair);
+  }
+  
+  private setupAudioControls(): void {
+    const muteButton = document.getElementById('mute-toggle');
+    if (!muteButton || !this.audioManager) return;
+    
+    muteButton.addEventListener('click', () => {
+      if (this.audioManager) {
+        this.audioManager.toggleMute();
+        const isMuted = this.audioManager.isMutedState();
+        
+        // Update button appearance
+        const icon = muteButton.querySelector('.mute-icon');
+        if (icon) {
+          icon.textContent = isMuted ? '🔇' : '🔊';
+        }
+        
+        if (isMuted) {
+          muteButton.classList.add('muted');
+        } else {
+          muteButton.classList.remove('muted');
+        }
+      }
+    });
   }
   
   private showLoadingProgress(text: string, percent: number): void {

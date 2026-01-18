@@ -7,17 +7,20 @@ import {
   AbstractMesh
 } from '@babylonjs/core';
 import { Player } from '../entities/Player';
+import { AudioManager } from '../core/AudioManager';
 import { CONFIG } from '../config';
 
 export class CombatSystem {
   private scene: Scene;
   private player: Player;
+  private audioManager: AudioManager;
   private lastShootTime = 0;
   private muzzleFlash: ParticleSystem | null = null;
   
-  constructor(scene: Scene, player: Player) {
+  constructor(scene: Scene, player: Player, audioManager: AudioManager) {
     this.scene = scene;
     this.player = player;
+    this.audioManager = audioManager;
     
     // Create muzzle flash particle system
     this.setupMuzzleFlash();
@@ -84,6 +87,9 @@ export class CombatSystem {
       // Visual feedback on hit
       this.createHitEffect(hit.pickedPoint!);
       
+      // Play impact sound at hit position
+      this.audioManager.playSoundAtPosition('impact', hit.pickedPoint!);
+      
       // TODO: Apply damage to NPCs/enemies
       if (hit.pickedMesh) {
         this.applyDamage(hit.pickedMesh, CONFIG.SHOOT_DAMAGE);
@@ -93,8 +99,8 @@ export class CombatSystem {
     // Trigger muzzle flash
     this.triggerMuzzleFlash(playerPos.add(direction.scale(0.5)));
     
-    // TODO: Play gunshot sound
-    console.log('Bang!');
+    // Play gunshot sound
+    this.audioManager.playSound('gunshot');
   }
   
   private triggerMuzzleFlash(position: Vector3): void {
